@@ -43,7 +43,7 @@ class preJays:
     @staticmethod
     def readConversations():
         with open(FOLDER + "/" + CONV_FILE, "r") as f:
-            return [preJays.parseConversation(line) for line in f.readlines()]
+            return [preJays.parseConversation(line) for line in f.readlines() if not line.startswith("#")]
 
 if __name__ == "__main__":
     out = preJays.readConversations()
