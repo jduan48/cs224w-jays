@@ -83,41 +83,20 @@ class preJays:
             return string
 
     @staticmethod
-    def readConversations():
-        result = []
-        with open(FOLDER + "/" + CONV_FILE, "r") as f:
-            while True:
-                line = f.readline()
-                if not line:
-                    break
-                if not line.startswith("#"):
-                    d = {}
-                    if preJays.parseConversation(line, d):
-                        result.append(d)
-        return result
-
-    @staticmethod
-    def readProfiles():
-        result = []
-        with open(FOLDER + "/" + PROF_FILE, "r") as f:
-            while True:
-                line = f.readline()
-                if not line:
-                    break
-                if not line.startswith("#"):
-                    d = {}
-                    if preJays.parseProfile(line, d):
-                        result.append(d)
-        return result
+    def readData(input_file, output_file, parser):
+        open(output_file, 'w').close()
+        with open(output_file, 'a') as outfile:
+            with open(FOLDER + "/" + input_file, "r") as f:
+                while True:
+                    line = f.readline()
+                    if not line:
+                        break
+                    if not line.startswith("#"):
+                        d = {}
+                        if parser(line, d):
+                            json.dump(d, outfile)
+                            outfile.write('\n')
 
 if __name__ == "__main__":
-    convos = preJays.readConversations()
-    with open(CONV_RESULT_FILE, 'w') as outfile:
-        for convo in convos:
-            json.dump(convo, outfile)
-            outfile.write('\n')
-    profiles = preJays.readProfiles()
-    with open(PROF_RESULT_FILE, 'w') as outfile:
-        for profile in profiles:
-            json.dump(profile, outfile)
-            outfile.write('\n')
+    convos = preJays.readData(CONV_FILE, CONV_RESULT_FILE, preJays.parseConversation)
+    profiles = preJays.readData(PROF_FILE, PROF_RESULT_FILE, preJays.parseProfile)
