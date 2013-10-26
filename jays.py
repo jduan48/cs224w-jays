@@ -10,8 +10,8 @@ CONV_FILE = "conversations_dataset"
 PROF_FILE = "profiles_dataset.csv"
 CONV_RESULT_FILE = "json_convo_data"
 PROF_RESULT_FILE = "json_profile_data"
-START_TIME = time.strptime("9/12/13 7:00", "%m/%d/%y %H:%M")
-END_TIME = time.strptime("9/13/13 14:00", "%m/%d/%y %H:%M")
+START_TIME = time.strptime("9/12/13 12:00", "%m/%d/%y %H:%M")
+END_TIME = time.strptime("9/12/13 14:00", "%m/%d/%y %H:%M")
 
 CONV_ATTRS = [dict(index = 0, attr_name = "id", name = "chat", type = "int"),
               dict(index = 1, attr_name = "user1", name = "user", type = "int"),
