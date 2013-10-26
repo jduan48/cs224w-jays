@@ -3,11 +3,11 @@
 import csv
 import json
 
-from random_test import train, predict
+from train_mle import train, predict
 
-PROFILE_FILE = "profile"
-EDGE_TRAIN_FILE = "edge_input_train"
-EDGE_TEST_FILE = "edge_input_test"
+PROFILE_FILE = "input-data/json_profile_data"
+EDGE_TRAIN_FILE = "input-data/json_convo_data_train"
+EDGE_TEST_FILE = "input-data/json_convo_data_test"
 THETA_FILE = "tmp/theta"
 
 def run():

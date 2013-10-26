@@ -8,6 +8,7 @@ from random import random
 FOLDER = "test-data"
 CONV_FILE = "conversations_dataset"
 PROF_FILE = "profiles_dataset.csv"
+OUTPUT_FOLDER = "input-data"
 CONV_RESULT_FILE = "json_convo_data"
 PROF_RESULT_FILE = "json_profile_data"
 START_TIME = time.strptime("9/12/13 12:00", "%m/%d/%y %H:%M")
@@ -84,8 +85,8 @@ class preJays:
 
     @staticmethod
     def readData(input_file, output_file, parser):
-        open(output_file, 'w').close()
-        with open(output_file, 'a') as outfile:
+        open(OUTPUT_FOLDER + "/" + output_file, 'w').close()
+        with open(OUTPUT_FOLDER + "/" + output_file, 'a') as outfile:
             with open(FOLDER + "/" + input_file, "r") as f:
                 while True:
                     line = f.readline()

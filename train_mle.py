@@ -1,5 +1,5 @@
 """
-@param list of profiles 
+@param list of profiles
 @param list of edges
 @return list of thetas
 """
@@ -7,9 +7,9 @@ def train(profiles, convos):
     result = {}
     for profile in profiles:
         result[str(profile[0])] = {
-            'num_convos' = 0,
-            'total_convo_length' = 0,
-        }
+                'num_convos': 0,
+                'total_convo_length': 0,
+            }
     for convo in convos:
         result[str(convo[1])]['num_convos'] += 1
         result[str(convo[1])]['total_convo_length'] += convo[11]
@@ -27,9 +27,9 @@ Supports different feature-vector lengths for men and women.
 def predict(profiles, convos, thetas):
     result = [None] * len(convos)
     for i, (m, f) in enumerate(convos):
-        m_score = (thetas[str(m)]['total_convo_length'] / 
+        m_score = (thetas[str(m)]['total_convo_length'] /
                 float(thetas[str(m)]['num_convos']))
-        f_score = (thetas[str(f)]['total_convo_length'] / 
+        f_score = (thetas[str(f)]['total_convo_length'] /
                 float(thetas[str(f)]['num_convos']))
         result[i] = min(m_score, f_score)
     return result
