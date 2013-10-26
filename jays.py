@@ -2,11 +2,16 @@
 
 import csv
 import json
+import time
 from random import random
 
 FOLDER = "test-data"
 CONV_FILE = "conversations_dataset"
 PROF_FILE = "profiles_dataset.csv"
+CONV_RESULT_FILE = "json_convo_data"
+PROF_RESULT_FILE = "json_profile_data"
+START_TIME = time.strptime("9/12/13 7:00", "%m/%d/%y %H:%M")
+END_TIME = time.strptime("9/13/13 14:00", "%m/%d/%y %H:%M")
 
 CONV_ATTRS = [dict(index = 0, attr_name = "id", name = "chat", type = "int"),
               dict(index = 1, attr_name = "user1", name = "user", type = "int"),
@@ -26,22 +31,40 @@ PROF_ATTRS = [dict(index = 0, attr_name = "id", name = "profile", type = "int"),
               dict(index = 6, attr_name = "about", name = "", type = "dict")]
 
 class preJays:
+    used_profiles = set()
 
     @staticmethod
-    def parseConversation(line):
+    def parseConversation(line, d):
         items = line.split(";")
-        d = dict()
+        if not preJays.isValidTime(items):
+            return False
         for attr in CONV_ATTRS:
             d[attr["attr_name"]] = preJays.getData(items[attr["index"]], attr["name"], attr["type"])
-        return d
+        preJays.used_profiles.add(d["profile1"])
+        preJays.used_profiles.add(d["profile2"])
+        return True
 
     @staticmethod
-    def parseProfile(line):
+    def parseProfile(line, d):
         items = line.split(';')
-        d = dict()
+        if not preJays.isValidProfileId(items):
+            return False
         for attr in PROF_ATTRS:
             d[attr["attr_name"]] = preJays.getData(items[attr["index"]], attr["name"], attr["type"])
-        return d
+        return True
+
+    #check if this profile has been involved in a conversation in our subset
+    @staticmethod
+    def isValidProfileId(items):
+        if preJays.getData(items[0], PROF_ATTRS[0]["name"], PROF_ATTRS[0]["type"]) not in preJays.used_profiles:
+            return False
+        return True
+
+    @staticmethod
+    def isValidTime(items):
+        string = items[5]
+        convo_time = time.strptime(string, "%a %b %d %Y %H:%M:%S GMT+0000 (UTC)")
+        return convo_time > START_TIME and convo_time < END_TIME
 
     @staticmethod
     def getData(string, attr_name, type):
@@ -60,29 +83,20 @@ class preJays:
             return string
 
     @staticmethod
-    def readConversations():
-        result = []
-        with open(FOLDER + "/" + CONV_FILE, "r") as f:
-            while True:
-                line = f.readline()
-                if not line:
-                    break
-                if not line.startswith("#"):
-                    result.append(preJays.parseConversation(line))
-        return result
-
-    @staticmethod
-    def readProfiles():
-        result = []
-        with open(FOLDER + "/" + PROF_FILE, "r") as f:
-            while True:
-                line = f.readline()
-                if not line:
-                    break
-                if not line.startswith("#"):
-                    result.append(preJays.parseProfile(line))
-        return result
+    def readData(input_file, output_file, parser):
+        open(output_file, 'w').close()
+        with open(output_file, 'a') as outfile:
+            with open(FOLDER + "/" + input_file, "r") as f:
+                while True:
+                    line = f.readline()
+                    if not line:
+                        break
+                    if not line.startswith("#"):
+                        d = {}
+                        if parser(line, d):
+                            json.dump(d, outfile)
+                            outfile.write('\n')
 
 if __name__ == "__main__":
-    out = preJays.readProfiles()
-    print json.dumps(out, indent = 4)
+    convos = preJays.readData(CONV_FILE, CONV_RESULT_FILE, preJays.parseConversation)
+    profiles = preJays.readData(PROF_FILE, PROF_RESULT_FILE, preJays.parseProfile)
