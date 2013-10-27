@@ -18,7 +18,6 @@ def run():
     with open(EDGE_TRAIN_FILE, "r") as f:
         edges = [json.loads(line) for line in f.readlines()]
     theta = train(profiles, edges)
-    print "theta =", theta
     with open(THETA_FILE, "w") as f:
         f.write(json.dumps(theta))
 
