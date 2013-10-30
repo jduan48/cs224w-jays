@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-import csv
-import json
+import csv, json, sys
 from random import random
-
+sys.path.insert(0, './models')
 from train_mle import train, predict
+
 
 PROFILE_FILE = "input-data/json_profile_data"
 EDGE_TRAIN_FILE = "input-data/json_convo_data_train"
