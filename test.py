@@ -26,7 +26,7 @@ def run():
     assert len(edges) == len(edges_prediction), "There are " + len(edges) + "edges " +\
             "but only " + len(edges_prediction) + " predictions."
     diff = [edges[i]["lines1"] + edges[i]["lines2"] - edges_prediction[i] for i in range(len(edges))]
-    error = float(sum([x * x for x in diff])) / len(diff)
+    error = (float(sum([x * x for x in diff])) / len(diff)) ** 0.5
     print "the error is", error
 
 if __name__ == "__main__":
