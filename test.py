@@ -3,11 +3,11 @@
 import csv
 import json
 
-from random_test import train, predict
+from train_mle import train, predict
 
-PROFILE_FILE = "profile"
-EDGE_TRAIN_FILE = "edge_input_train"
-EDGE_TEST_FILE = "edge_input_test"
+PROFILE_FILE = "input-data/json_profile_data"
+EDGE_TRAIN_FILE = "input-data/json_convo_data_train"
+EDGE_TEST_FILE = "input-data/json_convo_data_test"
 THETA_FILE = "tmp/theta"
 
 def run():
@@ -17,11 +17,12 @@ def run():
         print "Read in", len(profiles), "profiles"
     with open(EDGE_TEST_FILE, "r") as f:
         edges = [json.loads(line) for line in f.readlines()]
+        edges = [edge for edge in edges if edge["lines1"] and edge["lines2"]]
         edges_filtered = [(item["user1"], item["user2"]) for item in edges]
         print "Read in", len(edges), "edges to predict"
     with open(THETA_FILE, "r") as f:
         theta = json.loads(f.read())
-    edge_prediction = predict(profiles, edges_filtered, theta)
+    edges_prediction = predict(profiles, edges_filtered, theta)
     assert len(edges) == len(edges_prediction), "There are " + len(edges) + "edges " +\
             "but only " + len(edges_prediction) + " predictions."
     diff = [edges[i]["lines1"] + edges[i]["lines2"] - edges_prediction[i] for i in range(len(edges))]

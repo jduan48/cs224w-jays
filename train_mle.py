@@ -1,21 +1,18 @@
 """
-@param list of profiles 
+@param list of profiles
 @param list of edges
 @return list of thetas
 """
 def train(profiles, convos):
     result = {}
-    for profile in profiles:
-        result[str(profile[0])] = {
-            'num_convos' = 0,
-            'total_convo_length' = 0,
-        }
     for convo in convos:
-        result[str(convo[1])]['num_convos'] += 1
-        result[str(convo[1])]['total_convo_length'] += convo[11]
-        result[str(convo[2])]['num_convos'] += 1
-        result[str(convo[2])]['total_convo_length'] += convo[10]
-    return result
+        user1, user2 = str(convo["user1"]), str(convo["user2"])
+        length = convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
+        for user in [user1, user2]:
+            if not user in result:
+                result[user] = []
+            result[user].append(length)
+    return dict((user, float(sum(convos)) / len(convos)) for (user, convos) in result.iteritems())
 
 """
 Supports different feature-vector lengths for men and women.
@@ -25,11 +22,12 @@ Supports different feature-vector lengths for men and women.
 @return predicted length of conversation
 """
 def predict(profiles, convos, thetas):
-    result = [None] * len(convos)
-    for i, (m, f) in enumerate(convos):
-        m_score = (thetas[str(m)]['total_convo_length'] / 
-                float(thetas[str(m)]['num_convos']))
-        f_score = (thetas[str(f)]['total_convo_length'] / 
-                float(thetas[str(f)]['num_convos']))
-        result[i] = min(m_score, f_score)
+    result = []
+    for male, female in convos:
+        user1, user2 = str(male), str(female)
+        if user1 in thetas and user2 in thetas:
+            prediction = (thetas[user1] + thetas[user2]) / 2.0
+        else:
+            prediction = 20
+        result.append(prediction)
     return result
