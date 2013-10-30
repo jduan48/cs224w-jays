@@ -17,7 +17,6 @@ def run():
         print "Read in", len(profiles), "profiles"
     with open(EDGE_TEST_FILE, "r") as f:
         edges = [json.loads(line) for line in f.readlines()]
-        edges = [edge for edge in edges if edge["lines1"] and edge["lines2"]]
         edges_filtered = [(item["user1"], item["user2"]) for item in edges]
         print "Read in", len(edges), "edges to predict"
     with open(THETA_FILE, "r") as f:
@@ -25,7 +24,9 @@ def run():
     edges_prediction = predict(profiles, edges_filtered, theta)
     assert len(edges) == len(edges_prediction), "There are " + len(edges) + "edges " +\
             "but only " + len(edges_prediction) + " predictions."
-    diff = [edges[i]["lines1"] + edges[i]["lines2"] - edges_prediction[i] for i in range(len(edges))]
+    diff = [edges[i]["lines1"] if edges[i]["lines1"] else 0 +\
+            edges[i]["lines2"] if edges[i]["lines2"] else 0 +\
+            - edges_prediction[i] for i in range(len(edges))]
     error = (float(sum([x * x for x in diff])) / len(diff)) ** 0.5
     print "the error is", error
 
