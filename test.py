@@ -3,7 +3,7 @@
 import csv
 import json
 
-from train_mle import train, predict
+from models.train_instance_average import train, predict
 
 PROFILE_FILE = "input-data/json_profile_data"
 EDGE_TRAIN_FILE = "input-data/json_convo_data_train"
