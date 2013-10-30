@@ -37,6 +37,7 @@ nosetests.xml
 
 # Any data file
 data/
+input-data/
 
 .*
 !/.gitignore
