@@ -37,7 +37,7 @@ nosetests.xml
 
 # Any data file
 data/*
-input-data/
+input-data/*
 
 # Any tmp file
 tmp/
