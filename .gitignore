@@ -37,6 +37,10 @@ nosetests.xml
 
 # Any data file
 data/
+input-data/
+
+# Any tmp file
+tmp/
 
 .*
 !/.gitignore

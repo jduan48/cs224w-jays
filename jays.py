@@ -2,6 +2,7 @@
 
 import csv
 import json
+import re
 import time
 from random import random
 
@@ -47,7 +48,7 @@ class preJays:
 
     @staticmethod
     def parseProfile(line, d):
-        items = line.split(';')
+        items = re.sub(r'&.*?;', '', line).split(';')
         if not preJays.isValidProfileId(items):
             return False
         for attr in PROF_ATTRS:

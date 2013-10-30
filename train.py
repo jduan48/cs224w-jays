@@ -2,8 +2,7 @@
 
 import csv, json, sys
 from random import random
-sys.path.insert(0, './models')
-from train_mle import train, predict
+from models.train_instance_average import train, predict
 
 
 PROFILE_FILE = "input-data/json_profile_data"
