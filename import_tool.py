@@ -7,6 +7,7 @@ NUMBERS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
 
 DATA_FOLDER = "input-data"
 PROFILE_FILE = "json_profile_data"
+EDGE_FILE = "input-data/json_convo_data"
 EDGE_TRAIN_FILE = "json_convo_data_train"
 EDGE_TEST_FILE = "json_convo_data_test"
 THETA_FILE = "tmp/theta"
@@ -49,3 +50,4 @@ def importTheta():
 def saveTheta(theta):
     with open(THETA_FILE, "w") as f:
         f.write(json.dumps(theta))
+

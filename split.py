@@ -1,17 +1,14 @@
 #!/usr/bin/env python
 
 from random import random
+from import_tool import *
 
 PROB_IN_TEST = 0.05
 
-EDGE_FILE = "input-data/json_convo_data"
-EDGE_TRAIN_FILE = "input-data/json_convo_data_train"
-EDGE_TEST_FILE = "input-data/json_convo_data_test"
-
 def run():
-    with open(EDGE_FILE, "r") as f:
-        train_file = open(EDGE_TRAIN_FILE, "w")
-        test_file = open(EDGE_TEST_FILE, "w")
+    with open(DATA_FOLDER + "/" + EDGE_FILE, "r") as f:
+        train_file = open(DATA_FOLDER + "/" + EDGE_TRAIN_FILE, "w")
+        test_file = open(DATA_FOLDER + "/" + EDGE_TEST_FILE, "w")
         while True:
             line = f.readline()
             if not line:
