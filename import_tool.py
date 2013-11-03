@@ -12,6 +12,8 @@ EDGE_TRAIN_FILE = "json_convo_data_train"
 EDGE_TEST_FILE = "json_convo_data_test"
 THETA_FILE = "tmp/theta"
 
+LOUD = False
+
 def importModule():
     if len(argv) == 1:
         with open(DEFAULT_FILE, "r") as f:
@@ -29,7 +31,7 @@ def importJSON(filename):
         for line in f.readlines():
             profiles.append(json.loads(line))
             count += 1
-            if count in NUMBERS or count % 5000 == 0:
+            if LOUD and count in NUMBERS or count % 5000 == 0:
                 print "Imported", count
     return profiles
 

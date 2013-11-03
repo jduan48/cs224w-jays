@@ -7,7 +7,7 @@ def train(profiles, convos):
     return sum([convo["lines1"] if convo["lines1"] else 0 + \
                 convo["lines2"] if convo["lines2"] else 0 for convo in convos]) \
                 / float(len(convos))
-    
+
 
 """
 Supports different feature-vector lengths for men and women.
