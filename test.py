@@ -20,7 +20,7 @@ def run():
     profiles = importProfile()
     print "Read in", len(profiles), "profiles"
     print "Loading convos..."
-    edges = importConvos()
+    edges = importConvosTest()
     edges_filtered = [(item["user1"], item["user2"]) for item in edges]
     edges_correct = [edges[i]["lines1"] if edges[i]["lines1"] else 0 +\
                      edges[i]["lines2"] if edges[i]["lines2"] else 0 \
