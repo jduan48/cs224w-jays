@@ -31,8 +31,8 @@ def predict(profiles, convos, thetas):
     for user1, user2 in convos:
         total = 0
         for user in user1, user2:
-            if user in users:
-                total += users[user]
+            if str(user) in users:
+                total += users[str(user)]
             else:
                 total += global_average
         result.append(total / 2.0)

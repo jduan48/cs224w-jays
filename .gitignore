@@ -36,8 +36,8 @@ nosetests.xml
 .pydevproject
 
 # Any data file
-data/
-input-data/
+data/*
+input-data/*
 
 # Any tmp file
 tmp/

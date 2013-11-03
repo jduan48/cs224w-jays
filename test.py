@@ -2,13 +2,25 @@
 
 import csv
 import json
-
-from models.train_instance_average import train, predict
+import os
+from sys import argv, path
 
 PROFILE_FILE = "input-data/json_profile_data"
 EDGE_TRAIN_FILE = "input-data/json_convo_data_train"
 EDGE_TEST_FILE = "input-data/json_convo_data_test"
 THETA_FILE = "tmp/theta"
+DEFAULT_FILE = "DEFAULT_MODEL"
+
+def importModule():
+    global model
+    if len(argv) == 1:
+        with open(DEFAULT_FILE, "r") as f:
+            model_name = f.read().strip()
+    else:
+        model_name = argv[1]
+        if model_name.endswith(".py"):
+          model_name = model_name[:-len(".py")]
+    model = __import__(model_name)
 
 def computeError(min_length, edges_correct, edges_prediction):
     indices = [i for i in range(len(edges_correct)) if edges_correct[i] >= min_length]
@@ -30,7 +42,7 @@ def run():
         print "Read in", len(edges), "edges to predict"
     with open(THETA_FILE, "r") as f:
         theta = json.loads(f.read())
-    edges_prediction = predict(profiles, edges_filtered, theta)
+    edges_prediction = model.predict(profiles, edges_filtered, theta)
     assert len(edges) == len(edges_prediction), "There are " + len(edges) + "edges " +\
             "but only " + len(edges_prediction) + " predictions."
     for min_length in [0, 3, 10]:
@@ -39,6 +51,7 @@ def run():
                 num_edges, "conversations) is", error
 
 if __name__ == "__main__":
+    importModule()
     run()
 
 
