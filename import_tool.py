@@ -42,6 +42,9 @@ def importConvosTrain():
 def importConvosTest():
     return importJSON(DATA_FOLDER + "/" + EDGE_TEST_FILE)
 
+def importConvos():
+    return importJSON(DATA_FOLDER + "/" + EDGE_FILE)
+
 def importTheta():
     with open(THETA_FILE, "r") as f:
         theta = json.loads(f.read())
