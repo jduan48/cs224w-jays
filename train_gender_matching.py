@@ -30,7 +30,10 @@ def train(profiles, convos):
         g1, g2 = GENDER_DICT[getGender(profiles, profile1)], GENDER_DICT[getGender(profiles, profile2)]
         lists[g1 + g2][0] += 1
         lists[g1 + g2][1] += convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
-    print lists
+    
+    for g1, g2 in combinations_with_replacement(GENDER_DICT.values(), 2):
+        lists[g1 + g2] = lists[g1 + g2][1] / float(lists[g1 + g2][0])
+ 
     return lists
 
 """
@@ -43,8 +46,8 @@ Supports different feature-vector lengths for men and women.
 def predict(profiles, convos, thetas):
     profiles = dictify(profiles)
     result = []
-
+        
     for id1, id2, profile1, profile2 in convos:
         g1, g2 = GENDER_DICT[getGender(profiles, profile1)], GENDER_DICT[getGender(profiles, profile2)]
-        result.append(thetas[str(g1 + g2)][1] / float(thetas[str(g1 + g2)][0]))
+        result.append(thetas[str(g1 + g2)])
     return result
