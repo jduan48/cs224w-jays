@@ -12,8 +12,6 @@ def run():
         for u in [edge["user1"], edge["user2"]]:
             if int(u) not in profs:
                 print u
-            else:
-                print "good"
 
 if __name__ == "__main__":
     run()
