@@ -26,7 +26,6 @@ def train(profiles, convos):
         profile1, profile2 = convo["profile1"], convo["profile2"]
         g1, g2 = GENDER_DICT[getGender(profiles, profile1)], GENDER_DICT[getGender(profiles, profile2)]
         lists[g1 + g2].append(convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0)
-    
     thetas = {}
     for (key, lengths) in lists.iteritems():
         thetas[key] = median(lengths)

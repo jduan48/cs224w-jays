@@ -28,7 +28,7 @@ def train(profiles, convos):
     all_convos = []
     
     for convo in convos:
-        user1, user2 = str(convo["user1"]), str(convo["user2"])
+        user1, user2 = convo["profile1"], convo["profile2"]
         length = convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
         
         for user in [user1, user2]:
@@ -43,12 +43,12 @@ def train(profiles, convos):
         all_convos.append(length)
     return {"thetas":result, "global_average":(sum(all_convos) / float(len(all_convos)))}
 
-def getUserPrediction(id1, id2, gender, thetas, global_avg):
-    if id1 in thetas:
-        if not thetas[id1][str(gender)][0]:
-            return thetas[id1][str(gender)][1] / thetas[id1][str(gender)][0]
+def getUserPrediction(profile1, profile2, gender, thetas, global_avg):
+    if profile1 in thetas:
+        if not thetas[str(profile1)][str(gender)][0]:
+            return thetas[str(profile1)][str(gender)][1] / thetas[str(profile1)][str(gender)][0]
         #otherwise, get person's avg conversation length
-        convo_lengths = [thetas[id1][str(g)][1] for g in GENDER_DICT.values() if thetas[id1][str(g)][0]]
+        convo_lengths = [thetas[str(profile1)][str(g)][1] for g in GENDER_DICT.values() if thetas[str(profile1)][str(g)][0]]
         return (total / float(num_values)) if num_values else global_avg
     return global_avg
 
@@ -65,7 +65,7 @@ def predict(profiles, convos, thetas):
     thetas = thetas["thetas"]
     for id1, id2, profile1, profile2 in convos:
         g1, g2 = GENDER_DICT[getGender(profiles, profile1)], GENDER_DICT[getGender(profiles, profile2)]
-        user1_prediction = getUserPrediction(id1, id2, g2, thetas, global_avg)
+        user1_prediction = getUserPrediction(profile1, profile2, g2, thetas, global_avg)
         user2_prediction = getUserPrediction(id2, id1, g1, thetas, global_avg)
         result.append((user1_prediction + user2_prediction) / 2.0)
     return result

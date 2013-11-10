@@ -1,5 +1,9 @@
 from itertools import combinations_with_replacement
 
+"""
+Looks at each pair of M-F, F-F, etc., and predicts based on the average of that.
+"""
+
 GENDER_DICT = {"M": 1, "F": 2, "None": 4}
 def getGender(profiles, profile_id):
     if not profile_id in profiles:
@@ -26,6 +30,7 @@ def train(profiles, convos):
         g1, g2 = GENDER_DICT[getGender(profiles, profile1)], GENDER_DICT[getGender(profiles, profile2)]
         lists[g1 + g2][0] += 1
         lists[g1 + g2][1] += convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
+    print lists
     return lists
 
 """
@@ -41,5 +46,5 @@ def predict(profiles, convos, thetas):
 
     for id1, id2, profile1, profile2 in convos:
         g1, g2 = GENDER_DICT[getGender(profiles, profile1)], GENDER_DICT[getGender(profiles, profile2)]
-        result.append(thetas[str(g1 + g2)][1] / thetas[str(g1 + g2)][0])
+        result.append(thetas[str(g1 + g2)][1] / float(thetas[str(g1 + g2)][0]))
     return result
