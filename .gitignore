@@ -41,6 +41,7 @@ input-data/
 
 # Any tmp file
 tmp/
+result/
 
 .*
 !/.gitignore
