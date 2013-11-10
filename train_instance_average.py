@@ -28,7 +28,7 @@ Supports different feature-vector lengths for men and women.
 def predict(profiles, convos, thetas):
     result = []
     users, global_average = thetas["users"], thetas["global_average"]
-    for user1, user2 in convos:
+    for user1, user2, profile1, profile2 in convos:
         total = 0
         for user in user1, user2:
             if str(user) in users:

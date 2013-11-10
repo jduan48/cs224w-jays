@@ -1,0 +1,17 @@
+CORRECT_FILE = 'result/correct';
+PREDICTION_FILE = 'result/prediction';
+
+c = load(CORRECT_FILE);
+p = load(PREDICTION_FILE);
+
+indices = find(c <= 5 & p <= 5);
+
+x = c(indices, :);
+y = p(indices, :);
+
+% change slightly to show all nodes
+epi = 1e-1;
+hold on
+plot(x + rand(size(x, 1), 1) * epi, y + rand(size(y, 1), 1) * epi, 'p')
+plot([0 4], [0, 4], 'r');
+hold off

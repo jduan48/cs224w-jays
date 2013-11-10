@@ -12,6 +12,12 @@ EDGE_TRAIN_FILE = "json_convo_data_train"
 EDGE_TEST_FILE = "json_convo_data_test"
 THETA_FILE = "tmp/theta"
 
+RESULT_FOLDER = "result"
+PREDICTION_FILE = "prediction"
+CORRECT_FILE = "correct"
+
+LOUD = False
+
 def importModule():
     if len(argv) == 1:
         with open(DEFAULT_FILE, "r") as f:
@@ -29,7 +35,7 @@ def importJSON(filename):
         for line in f.readlines():
             profiles.append(json.loads(line))
             count += 1
-            if count in NUMBERS or count % 5000 == 0:
+            if LOUD and count in NUMBERS or count % 5000 == 0:
                 print "Imported", count
     return profiles
 
@@ -54,3 +60,9 @@ def saveTheta(theta):
     with open(THETA_FILE, "w") as f:
         f.write(json.dumps(theta))
 
+def savePrediction(correct, prediction):
+    assert len(correct) == len(prediction)
+    with open(RESULT_FOLDER + "/" + PREDICTION_FILE, "w") as f:
+        f.write("\n".join([str(item) for item in prediction]))
+    with open(RESULT_FOLDER + "/" + CORRECT_FILE, "w") as f:
+        f.write("\n".join([str(item) for item in correct]))
