@@ -7,7 +7,7 @@ def train(profiles, convos):
     result = {}
     global_convos = []
     for convo in convos:
-        user1, user2 = str(convo["user1"]), str(convo["user2"])
+        user1, user2 = str(convo["profile1"]), str(convo["profile2"])
         length = convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
         for user in [user1, user2]:
             if not user in result:
@@ -30,7 +30,7 @@ def predict(profiles, convos, thetas):
     users, global_average = thetas["users"], thetas["global_average"]
     for user1, user2, profile1, profile2 in convos:
         total = 0
-        for user in user1, user2:
+        for user in profile1, profile2:
             if str(user) in users:
                 total += users[str(user)]
             else:
