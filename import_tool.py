@@ -5,12 +5,16 @@ from sys import argv
 DEFAULT_FILE = "DEFAULT_MODEL"
 NUMBERS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
 
-DATA_FOLDER = "small-data"
+DATA_FOLDER = "medium-data"
 PROFILE_FILE = "json_profile_data"
 EDGE_FILE = "json_convo_data"
 EDGE_TRAIN_FILE = "json_convo_data_train"
 EDGE_TEST_FILE = "json_convo_data_test"
 THETA_FILE = "tmp/theta"
+
+RESULT_FOLDER = "result"
+PREDICTION_FILE = "prediction"
+CORRECT_FILE = "correct"
 
 LOUD = False
 
@@ -44,6 +48,9 @@ def importConvosTrain():
 def importConvosTest():
     return importJSON(DATA_FOLDER + "/" + EDGE_TEST_FILE)
 
+def importConvos():
+    return importJSON(DATA_FOLDER + "/" + EDGE_FILE)
+
 def importTheta():
     with open(THETA_FILE, "r") as f:
         theta = json.loads(f.read())
@@ -53,3 +60,9 @@ def saveTheta(theta):
     with open(THETA_FILE, "w") as f:
         f.write(json.dumps(theta))
 
+def savePrediction(correct, prediction):
+    assert len(correct) == len(prediction)
+    with open(RESULT_FOLDER + "/" + PREDICTION_FILE, "w") as f:
+        f.write("\n".join([str(item) for item in prediction]))
+    with open(RESULT_FOLDER + "/" + CORRECT_FILE, "w") as f:
+        f.write("\n".join([str(item) for item in correct]))
