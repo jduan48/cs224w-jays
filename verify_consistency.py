@@ -9,7 +9,7 @@ def run():
     edges = importConvos()
     print "Read in", len(edges), "edges"
     for edge in edges:
-        for u in [edge["user1"], edge["user2"]]:
+        for u in [edge["profile1"], edge["profile2"]]:
             if int(u) not in profs:
                 print u
 
