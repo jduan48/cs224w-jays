@@ -9,11 +9,11 @@ from random import random
 FOLDER = "data"
 CONV_FILE = "conversations_dataset"
 PROF_FILE = "profiles_dataset.csv"
-OUTPUT_FOLDER = "medium-data"
+OUTPUT_FOLDER = "small-data"
 CONV_RESULT_FILE = "json_convo_data"
 PROF_RESULT_FILE = "json_profile_data"
 START_TIME = time.strptime("9/12/13 12:00", "%m/%d/%y %H:%M")
-END_TIME = time.strptime("9/12/13 17:30", "%m/%d/%y %H:%M")
+END_TIME = time.strptime("9/12/13 12:30", "%m/%d/%y %H:%M")
 
 CONV_ATTRS = [dict(index = 0, attr_name = "id", name = "chat", type = "int"),
               dict(index = 1, attr_name = "user1", name = "user", type = "int"),
@@ -42,8 +42,8 @@ class preJays:
             return False
         for attr in CONV_ATTRS:
             d[attr["attr_name"]] = preJays.getData(items[attr["index"]], attr["name"], attr["type"])
-        preJays.used_profiles.add(d["user1"])
-        preJays.used_profiles.add(d["user2"])
+        preJays.used_profiles.add(d["profile1"])
+        preJays.used_profiles.add(d["profile2"])
         return True
 
     @staticmethod
