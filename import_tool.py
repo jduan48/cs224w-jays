@@ -12,6 +12,10 @@ EDGE_TRAIN_FILE = "json_convo_data_train"
 EDGE_TEST_FILE = "json_convo_data_test"
 THETA_FILE = "tmp/theta"
 
+RESULT_FOLDER = "result"
+PREDICTION_FILE = "prediction"
+CORRECT_FILE = "correct"
+
 LOUD = False
 
 def importModule():
@@ -53,3 +57,9 @@ def saveTheta(theta):
     with open(THETA_FILE, "w") as f:
         f.write(json.dumps(theta))
 
+def savePrediction(correct, prediction):
+    assert len(correct) == len(prediction)
+    with open(RESULT_FOLDER + "/" + PREDICTION_FILE, "w") as f:
+        f.write("\n".join([str(item) for item in prediction]))
+    with open(RESULT_FOLDER + "/" + CORRECT_FILE, "w") as f:
+        f.write("\n".join([str(item) for item in correct]))

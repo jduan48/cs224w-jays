@@ -36,6 +36,7 @@ def run():
     print "Theta loaded..."
     print "Predicting..."
     edges_prediction = model.predict(profiles, edges_filtered, theta)
+    savePrediction(edges_correct, edges_prediction)
     assert len(edges) == len(edges_prediction), "There are " + len(edges) + "edges " +\
             "but only " + len(edges_prediction) + " predictions."
     for min_length in [0, 1, 3, 10]:
