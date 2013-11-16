@@ -16,8 +16,13 @@ y = p(indices, :);
 
 % change slightly to show all nodes
 epi = .5;
-clf
+
+subplot(2,2,4);
 hold on
-plot(x + rand(size(x, 1), 1) * epi, y + rand(size(y, 1), 1) * epi, 'o')
+clf;
+title('Gender Average');
+%xlabel('actual conversation length');
+%ylabel('predicted conversation length');
+plot(x + rand(size(x, 1), 1) * epi, y + rand(size(y, 1), 1) * epi, 'o');
 plot([0 4], [0, 4], 'r');
 hold off

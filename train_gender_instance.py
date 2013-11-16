@@ -24,19 +24,19 @@ thetas[user][gender] = [count, total]
 """
 def train(profiles, convos):
     profiles = dictify(profiles)
-    
+
     result = {}
     all_convos = []
-    
+
     for convo in convos:
         user1, user2 = convo["profile1"], convo["profile2"]
         length = convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
-        
+
         for user in [user1, user2]:
             if not user in result:
                 result[user] = {}
                 for g in GENDER_DICT.values():
-                    result[user][g] = [0,0]  
+                    result[user][g] = [0,0]
         user1_gender = GENDER_DICT[getGender(profiles, user1)]
         user2_gender = GENDER_DICT[getGender(profiles, user2)]
         result[user1][user2_gender] = [result[user1][user2_gender][0] + 1, result[user1][user2_gender][1] + length]
@@ -71,5 +71,5 @@ def predict(profiles, convos, thetas):
         user1_prediction = getUserPrediction(profile1, profile2, g2, thetas, global_avg)
         user2_prediction = getUserPrediction(id2, id1, g1, thetas, global_avg)
         result.append((user1_prediction + user2_prediction) / 2.0)
-    
+
     return result

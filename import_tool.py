@@ -26,7 +26,8 @@ def importModule():
         model_name = argv[1]
         if model_name.endswith(".py"):
           model_name = model_name[:-len(".py")]
-    print "Imported model", model_name
+    if LOUD:
+        print "Imported model", model_name
     return __import__(model_name)
 
 def importJSON(filename):
@@ -35,7 +36,7 @@ def importJSON(filename):
         for line in f.readlines():
             profiles.append(json.loads(line))
             count += 1
-            if LOUD and count in NUMBERS or count % 5000 == 0:
+            if LOUD and (count in NUMBERS or count % 5000 == 0):
                 print "Imported", count
     return profiles
 
