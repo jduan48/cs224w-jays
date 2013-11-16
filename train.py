@@ -9,13 +9,10 @@ model = importModule()
 
 def run():
     print "Start training..."
-    print "Loading profiles..."
     profiles = importProfile()
     print "Read in", len(profiles), "profiles"
-    print "Loading edges..."
     edges = importConvosTrain()
     print "Loading edges finished."
-    print "Training..."
     theta = model.train(profiles, edges)
     print "Training finished."
     saveTheta(theta)
