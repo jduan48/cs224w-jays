@@ -1,34 +1,50 @@
 #!/usr/bin/env python
 
+from import_tool import importJSON, importMappedProfiles
+import verify_consistency
 import json
-from sys import argv
-from import_tool import *
+import sys
 
-def run():
-    print "Start testing..."
-    print "Loading profiles..."
-    profiles = importProfile()
-    print "Read in", len(profiles), "profiles"
-    print "Loading convos..."
-    edges = importConvosTest()
-    for edge in edges:
-        if profile
-    edges_filtered = [(item["user1"], item["user2"]) for item in edges]
-    edges_correct = [edges[i]["lines1"] if edges[i]["lines1"] else 0 +\
-                     edges[i]["lines2"] if edges[i]["lines2"] else 0 \
-                     for i in range(len(edges))]
-    print "Read in", len(edges), "edges to predict"
-    print "Loading theta..."
-    theta = importTheta()
-    print "Theta loaded..."
-    print "Predicting..."
-    edges_prediction = model.predict(profiles, edges_filtered, theta)
-    assert len(edges) == len(edges_prediction), "There are " + len(edges) + "edges " +\
-            "but only " + len(edges_prediction) + " predictions."
-    for min_length in [0, 3, 10]:
-        num_edges, error = computeError(min_length, edges_correct, edges_prediction)
-        print "the error for min length", min_length, "(a total of",\
-                num_edges, "conversations) is", error
+g = "gender"
+rep = "reported_id"
+disc = "disconnected_id"
+
+def valid(profiles, edge):
+    p1 = edge["profile1"]
+    p2 = edge["profile2"]
+    if profiles[p1][g] == None or profiles[p2][g] == None or \
+       profiles[p1][g] == profiles[p2][g]:
+        return False
+    if profiles[p1][g] == "F":
+        edge["profile1"], edge["profile2"] = p2, p1
+        edge["user1"], edge["user2"] = edge["user2"], edge["user1"]
+        edge["lines1"], edge["lines2"] = edge["lines2"], edge["lines1"]
+        swap = {
+            edge["user2"] : edge["user1"],
+            edge["user1"] : edge["user2"],
+            None : None,
+        }
+        edge["reported_id"] = swap[edge["reported_id"]]
+        edge["disconnect"] = swap[edge["disconnect"]]
+    upmap = {
+        edge["user1"] : edge["profile1"],
+        edge["user2"] : edge["profile2"],
+        None : None,
+    }
+    edge["reported_id"] = upmap[edge["reported_id"]]
+    edge["disconnect"] = upmap[edge["disconnect"]]
+    return True
+
+def run(convoFile):
+    profiles = importMappedProfiles()
+    edges = importJSON(convoFile)
+    verify_consistency.run(edges)
+
+    with open(convoFile + "_bipartite", "w") as outfile:
+        for edge in edges:
+            if valid(profiles, edge):
+                json.dump(edge, outfile)
+                outfile.write('\n')
 
 if __name__ == "__main__":
-    run()
+    run(sys.argv[1])

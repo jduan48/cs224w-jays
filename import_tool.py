@@ -43,6 +43,9 @@ def importJSON(filename):
 def importProfile():
     return importJSON(DATA_FOLDER + "/" + PROFILE_FILE)
 
+def importMappedProfiles():
+    return dict([(item["id"], item) for item in importProfile()])
+
 def importConvosTrain():
     return importJSON(DATA_FOLDER + "/" + EDGE_TRAIN_FILE)
 
