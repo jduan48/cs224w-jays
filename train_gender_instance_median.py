@@ -14,9 +14,6 @@ def getGender(profiles, profile_id):
         return "None"
     return str(profiles[profile_id]["gender"])
 
-def dictify(profiles):
-    return dict([(item["id"], item) for item in profiles])
-
 """
 @param list of profiles
 @param list of edges
@@ -24,7 +21,6 @@ def dictify(profiles):
 thetas[user][gender] = [count, total]
 """
 def train(profiles, convos):
-    profiles = dictify(profiles)    
     result = {}
     global_avgs = defaultdict(list)
     
