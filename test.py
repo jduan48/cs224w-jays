@@ -29,7 +29,7 @@ def positiveNegative(edges_correct, edges_prediction, threshold):
 
 def run():
     print "Start testing..."
-    profiles = importProfile()
+    profiles = importMappedProfiles()
     print "Read in", len(profiles), "profiles"
     edges = importConvosTest()
     edges_filtered = [(item["user1"], item["user2"], item["profile1"], item["profile2"]) for item in edges]

@@ -17,9 +17,9 @@ y = p(indices, :);
 % change slightly to show all nodes
 epi = .5;
 
-subplot(2,2,4);
-hold on
 clf;
+
+hold on
 title('Gender Average');
 %xlabel('actual conversation length');
 %ylabel('predicted conversation length');

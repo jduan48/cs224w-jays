@@ -9,7 +9,7 @@ model = importModule()
 
 def run():
     print "Start training..."
-    profiles = importProfile()
+    profiles = importMappedProfiles()
     print "Read in", len(profiles), "profiles"
     edges = importConvosTrain()
     print "Loading edges finished."
