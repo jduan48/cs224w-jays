@@ -34,17 +34,12 @@ def getSimilarity(profile1, profile2, profiles):
 Given the user profiles, predict how much the number of lines from profile1
 to profile2 deviates from the average
 """
-
-PRINT = 10
 def getUserDelta(profile1, profile2, user_delta, profiles):
-    if not str(profile1) in user_delta:
+    if not str(profile1) in user_delta or not profile1 in profiles:
         return 0
-    print "DOING", profiles[str(profile1)]
-    if PRINT:
-        for profile, line in user_delta[str(profile)]:
-            print line, profiles[profile]
-        PRINT -= 1
-
+    print "DOING", profiles[profile1]
+    for profile, line in user_delta[str(profile1)]:
+        print profiles[profile]
     weights = dict([(profile, getSimilarity(profile2, profile, profiles)) for (profile, line) in user_delta[str(profile1)]])
     return float(sum([line * weights[profile] for (profile, line) in user_delta[str(profile1)]])) / sum(weights.values())
 
