@@ -8,7 +8,7 @@ from import_tool import *
 
 model = importModule()
 
-thresholds = [1, 3]
+thresholds = [3, 5, 7, 10]
 
 def computeError(min_length, edges_correct, edges_prediction):
     indices = [i for i in range(len(edges_correct)) if edges_correct[i] >= min_length]
@@ -43,6 +43,8 @@ def run():
     savePrediction(edges_correct, edges_prediction)
     assert len(edges) == len(edges_prediction), "There are " + len(edges) + "edges " +\
             "but only " + len(edges_prediction) + " predictions."
+
+    print "compute error:",  computeError(0, edges_correct, edges_prediction)
     for threshold in thresholds:
         percentages = positiveNegative(edges_correct, edges_prediction, threshold)
         print "Threshold: %s \t At least \t\t Less than \t (Actual)" % threshold

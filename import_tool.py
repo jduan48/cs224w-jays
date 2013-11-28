@@ -5,7 +5,7 @@ from sys import argv
 DEFAULT_FILE = "DEFAULT_MODEL"
 NUMBERS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
 
-DATA_FOLDER = "medium-data"
+DATA_FOLDER = "medium-bipartite"
 PROFILE_FILE = "json_profile_data"
 EDGE_FILE = "json_convo_data"
 EDGE_TRAIN_FILE = "json_convo_data_train"
@@ -16,7 +16,16 @@ RESULT_FOLDER = "result"
 PREDICTION_FILE = "prediction"
 CORRECT_FILE = "correct"
 
+# https://github.com/mledoze/countries
+COUNTRY_FILE = "countries.json"
+
 LOUD = False
+
+def importCountries():
+    with open(COUNTRY_FILE, "r") as f:
+        countries_list = json.load(f)
+        countries = dict([(item["name"], item) for item in countries_list])
+    return countries
 
 def importModule():
     if len(argv) == 1:
