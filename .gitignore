@@ -43,5 +43,7 @@ input-data/
 tmp/
 result/
 
+*.db
+
 .*
 !/.gitignore

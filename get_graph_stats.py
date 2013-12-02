@@ -38,16 +38,31 @@ def get_node_sets(graph):
             Y.add(key)
     return (X, Y)
 
-def drawHistogram(values, filename, bar_width):
-    plt.clf()
+def drawHistogram(values, filename, bar_width, xlabel, ylabel):
+    drawStacked(values, None, filename, bar_width, xlabel, ylabel)
+
+def get_xy(values):    
     histogram = defaultdict(int)
     for value in values:
         histogram[value] += 1
     x_vals = histogram.keys()
     x_vals.sort()
     y_vals = [histogram[x] for x in x_vals]
-    plt.bar(x_vals, y_vals, width=bar_width)
+    return x_vals, y_vals
+    
+def drawStacked(v1, v2, filename, bar_width, xlabel, ylabel):
+    plt.clf()
+    x1, y1 = get_xy(v1)
+    plt.bar(x1, y1, width=bar_width, color='b')
+    if v2: # not tested
+        x2, y2 = get_xy(v2)
+        plt.bar(x2, y2, width=bar_width, color='r', bottom=y1)
+    if xlabel:
+        plt.xlabel(xlabel)
+    if ylabel:
+        plt.ylabel(ylabel)
     plt.savefig('/'.join([PLOTS_FOLDER, filename]))
+
 
 """
 Returns number of nodes in each connected component and its diameter.
@@ -68,16 +83,22 @@ def get_density(graph, X):
 
 def get_degree_distribution(graph, X):
     degrees = nx.bipartite.degrees(graph, X)
-    drawHistogram(degrees[0].values(), DEGREE_DISTRIBUTION_FILE, 1)
+    drawHistogram(degrees[0].values(), DEGREE_DISTRIBUTION_FILE, 1, None, None)
 
 def get_node_redundancy(graph):
     redundancies = nx.bipartite.node_redundancy(graph)
     redundancies = map(lambda x: round(x, 1), redundancies.values())
-    drawHistogram(redundancies, REDUNDANCY_DISTRIBUTION_FILE, 0.1)
+    drawHistogram(redundancies, REDUNDANCY_DISTRIBUTION_FILE, 0.1, None, None)
+
+def render_graph(graph):
+    plt.clf()
+    nx.draw(graph)
+    plt.savefig('/'.join([PLOTS_FOLDER, "layout.png"]))
 
 def run():
     edges = importConvosTrain()
     graph = createGraph(edges)
+    # render_graph(graph)
     X, Y = get_node_sets(graph)
 
     get_diameters(graph)
@@ -85,6 +106,6 @@ def run():
     get_density(graph, X)
     get_degree_distribution(graph, X)
     get_node_redundancy(graph)
-    
+
 if __name__ == "__main__":
     run()
