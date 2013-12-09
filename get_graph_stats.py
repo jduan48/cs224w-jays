@@ -4,6 +4,8 @@ from itertools import combinations_with_replacement
 import networkx as nx
 import csv, json, sys
 from random import random
+from random import sample
+from operator import itemgetter
 from sys import argv
 from import_tool import *
 import matplotlib
@@ -15,6 +17,7 @@ IS_BIPARTITE = False
 PLOTS_FOLDER = "plots"
 DEGREE_DISTRIBUTION_FILE = "degree_distribution.png"
 REDUNDANCY_DISTRIBUTION_FILE = "redundancy_distribution.png"
+THRESH = 10
 
 def createGraph(convos):
     graph1 = nx.Graph()
@@ -23,6 +26,7 @@ def createGraph(convos):
         length = convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
         profile1 = convo["profile1"]
         profile2 = convo["profile2"]
+<<<<<<< HEAD
         if length > 0:
             if not graph1.has_node(profile1):
                 graph1.add_node(profile1)
@@ -35,6 +39,17 @@ def createGraph(convos):
             graph2.add_node(profile2)
         graph2.add_edge(profile1, profile2)
     return (graph1, graph2)
+=======
+        if not graph.has_node(profile1):
+            graph.add_node(profile1)
+        if not graph.has_node(profile2):
+            graph.add_node(profile2)
+        l1 = convo["lines1"] if convo["lines1"] else 0
+        l2 = convo["lines2"] if convo["lines2"] else 0
+        graph.add_edge(profile1, profile2,
+                       success=(l1 + l2 >= THRESH))
+    return graph
+>>>>>>> 46a918b0fd6c81b884539e3fe3d86ab30420868d
 
 def get_node_sets(graph):
     if not IS_BIPARTITE:
@@ -113,6 +128,21 @@ def render_graph(graph):
     nx.draw(graph)
     plt.savefig('/'.join([PLOTS_FOLDER, "layout.png"]))
 
+def get_success_distribution(graph):
+    pairs = []
+    for node in sample(nx.nodes(graph), 200):
+        vals = [graph.edge[node][neigh]["success"] for neigh in nx.all_neighbors(graph, node)]
+        t = vals.count(True)
+        pairs.append([t, len(vals) - t])
+    pairs.sort(key = itemgetter(0, 1), reverse=True)
+    x = range(len(pairs))
+    y1 = [val[0] for val in pairs]
+    y2 = [val[1] for val in pairs]
+    plt.clf()
+    plt.bar(x, y1, color='b')
+    plt.bar(x, y2, color='r', bottom=y1)
+    plt.savefig("plots/success_hist.png")
+
 def run():
     edges = importConvosTrain()
     (convo_graph, full_graph) = createGraph(edges)
@@ -120,7 +150,8 @@ def run():
     print "full graph nodes: ", len(full_graph.nodes()) 
     print "convo graph edges: ", len(convo_graph.edges())
     print "convo graph nodes: ", len(convo_graph.nodes())   
-    render_graph(full_graph)
+    # render_graph(full_graph)
+    get_success_distribution(full_graph)
     X, Y = get_node_sets(convo_graph)
 
     get_diameters(convo_graph)
