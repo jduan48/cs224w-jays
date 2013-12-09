@@ -26,30 +26,17 @@ def createGraph(convos):
         length = convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
         profile1 = convo["profile1"]
         profile2 = convo["profile2"]
-<<<<<<< HEAD
         if length > 0:
             if not graph1.has_node(profile1):
                 graph1.add_node(profile1)
             if not graph1.has_node(profile2):
                 graph1.add_node(profile2)
-            graph1.add_edge(profile1, profile2)
         if not graph2.has_node(profile1):
             graph2.add_node(profile1)
         if not graph2.has_node(profile2):
             graph2.add_node(profile2)
-        graph2.add_edge(profile1, profile2)
+        graph2.add_edge(profile1, profile2, success=(l1 + l2 >= THRESH))
     return (graph1, graph2)
-=======
-        if not graph.has_node(profile1):
-            graph.add_node(profile1)
-        if not graph.has_node(profile2):
-            graph.add_node(profile2)
-        l1 = convo["lines1"] if convo["lines1"] else 0
-        l2 = convo["lines2"] if convo["lines2"] else 0
-        graph.add_edge(profile1, profile2,
-                       success=(l1 + l2 >= THRESH))
-    return graph
->>>>>>> 46a918b0fd6c81b884539e3fe3d86ab30420868d
 
 def get_node_sets(graph):
     if not IS_BIPARTITE:
