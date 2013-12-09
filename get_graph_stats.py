@@ -14,6 +14,7 @@ from collections import defaultdict
 PLOTS_FOLDER = "plots"
 DEGREE_DISTRIBUTION_FILE = "degree_distribution.png"
 REDUNDANCY_DISTRIBUTION_FILE = "redundancy_distribution.png"
+THRESH = 10
 
 def createGraph(convos):
     graph = nx.Graph()
@@ -24,7 +25,8 @@ def createGraph(convos):
             graph.add_node(profile1)
         if not graph.has_node(profile2):
             graph.add_node(profile2)
-        graph.add_edge(profile1, profile2)
+        graph.add_edge(profile1, profile2,
+                       success=(convo["lines1"] + convo["lines2"] >= THRESH))
     return graph
 
 def get_node_sets(graph):
@@ -99,6 +101,7 @@ def run():
     edges = importConvosTrain()
     graph = createGraph(edges)
     # render_graph(graph)
+    
     X, Y = get_node_sets(graph)
 
     get_diameters(graph)
