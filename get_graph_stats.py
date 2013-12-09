@@ -11,23 +11,34 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
+IS_BIPARTITE = False
 PLOTS_FOLDER = "plots"
 DEGREE_DISTRIBUTION_FILE = "degree_distribution.png"
 REDUNDANCY_DISTRIBUTION_FILE = "redundancy_distribution.png"
 
 def createGraph(convos):
-    graph = nx.Graph()
+    graph1 = nx.Graph()
+    graph2 = nx.Graph()
     for convo in convos:
+        length = convo["lines1"] if convo["lines1"] else 0 + convo["lines2"] if convo["lines2"] else 0
         profile1 = convo["profile1"]
         profile2 = convo["profile2"]
-        if not graph.has_node(profile1):
-            graph.add_node(profile1)
-        if not graph.has_node(profile2):
-            graph.add_node(profile2)
-        graph.add_edge(profile1, profile2)
-    return graph
+        if length > 0:
+            if not graph1.has_node(profile1):
+                graph1.add_node(profile1)
+            if not graph1.has_node(profile2):
+                graph1.add_node(profile2)
+            graph1.add_edge(profile1, profile2)
+        if not graph2.has_node(profile1):
+            graph2.add_node(profile1)
+        if not graph2.has_node(profile2):
+            graph2.add_node(profile2)
+        graph2.add_edge(profile1, profile2)
+    return (graph1, graph2)
 
 def get_node_sets(graph):
+    if not IS_BIPARTITE:
+        return (None, None)
     coloring = nx.bipartite.color(graph)
     X = set()
     Y = set()
@@ -69,6 +80,7 @@ Returns number of nodes in each connected component and its diameter.
 """
 def get_diameters(graph):
     connected_components = nx.connected_component_subgraphs(graph)
+    print "number of connected components: ", len(connected_components)
     diameters = []
     for subgraph in connected_components:
         diameters.append((len(subgraph), nx.diameter(subgraph)))
@@ -76,19 +88,25 @@ def get_diameters(graph):
 
 def get_clustering(graph):
     #print "clustering: ", nx.bipartite.clustering(graph)
-    print "average clustering: ", nx.bipartite.average_clustering(graph)
+    if IS_BIPARTITE:
+        print "average clustering: ", nx.bipartite.average_clustering(graph)
+    else:
+        print "average clustering: ", nx.average_clustering(graph)
 
 def get_density(graph, X):
-    print "density: ", nx.bipartite.density(graph, X)
+    if IS_BIPARTITE:
+        print "density: ", nx.bipartite.density(graph, X)
 
-def get_degree_distribution(graph, X):
-    degrees = nx.bipartite.degrees(graph, X)
-    drawHistogram(degrees[0].values(), DEGREE_DISTRIBUTION_FILE, 1, None, None)
+def get_degree_distribution(graph):
+    degrees = list(graph.degree(graph.nodes()).values())
+    drawHistogram(degrees, DEGREE_DISTRIBUTION_FILE, 1, "Degree", "Frequency")
 
 def get_node_redundancy(graph):
+    if not IS_BIPARTITE:
+        return
     redundancies = nx.bipartite.node_redundancy(graph)
     redundancies = map(lambda x: round(x, 1), redundancies.values())
-    drawHistogram(redundancies, REDUNDANCY_DISTRIBUTION_FILE, 0.1, None, None)
+    drawHistogram(redundancies, REDUNDANCY_DISTRIBUTION_FILE, 0.1, "Node Redundancy", "Frequency")
 
 def render_graph(graph):
     plt.clf()
@@ -97,15 +115,19 @@ def render_graph(graph):
 
 def run():
     edges = importConvosTrain()
-    graph = createGraph(edges)
-    # render_graph(graph)
-    X, Y = get_node_sets(graph)
+    (convo_graph, full_graph) = createGraph(edges)
+    print "full graph edges: ", len(full_graph.edges())
+    print "full graph nodes: ", len(full_graph.nodes()) 
+    print "convo graph edges: ", len(convo_graph.edges())
+    print "convo graph nodes: ", len(convo_graph.nodes())   
+    render_graph(full_graph)
+    X, Y = get_node_sets(convo_graph)
 
-    get_diameters(graph)
-    get_clustering(graph)
-    get_density(graph, X)
-    get_degree_distribution(graph, X)
-    get_node_redundancy(graph)
+    get_diameters(convo_graph)
+    get_clustering(convo_graph)
+    get_density(convo_graph, X)
+    get_degree_distribution(convo_graph)
+    get_node_redundancy(convo_graph)
 
 if __name__ == "__main__":
     run()
