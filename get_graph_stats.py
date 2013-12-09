@@ -4,6 +4,8 @@ from itertools import combinations_with_replacement
 import networkx as nx
 import csv, json, sys
 from random import random
+from random import sample
+from operator import itemgetter
 from sys import argv
 from import_tool import *
 import matplotlib
@@ -25,8 +27,10 @@ def createGraph(convos):
             graph.add_node(profile1)
         if not graph.has_node(profile2):
             graph.add_node(profile2)
+        l1 = convo["lines1"] if convo["lines1"] else 0
+        l2 = convo["lines2"] if convo["lines2"] else 0
         graph.add_edge(profile1, profile2,
-                       success=(convo["lines1"] + convo["lines2"] >= THRESH))
+                       success=(l1 + l2 >= THRESH))
     return graph
 
 def get_node_sets(graph):
@@ -97,11 +101,27 @@ def render_graph(graph):
     nx.draw(graph)
     plt.savefig('/'.join([PLOTS_FOLDER, "layout.png"]))
 
+def get_success_distribution(graph):
+    pairs = []
+    for node in sample(nx.nodes(graph), 200):
+        vals = [graph.edge[node][neigh]["success"] for neigh in nx.all_neighbors(graph, node)]
+        t = vals.count(True)
+        pairs.append([t, len(vals) - t])
+    pairs.sort(key = itemgetter(0, 1), reverse=True)
+    x = range(len(pairs))
+    y1 = [val[0] for val in pairs]
+    y2 = [val[1] for val in pairs]
+    plt.clf()
+    plt.bar(x, y1, color='b')
+    plt.bar(x, y2, color='r', bottom=y1)
+    plt.savefig("plots/success_hist.png")
+
 def run():
-    edges = importConvosTrain()
+    edges = importConvos()
     graph = createGraph(edges)
     # render_graph(graph)
-    
+    get_success_distribution(graph)
+    """
     X, Y = get_node_sets(graph)
 
     get_diameters(graph)
@@ -109,6 +129,7 @@ def run():
     get_density(graph, X)
     get_degree_distribution(graph, X)
     get_node_redundancy(graph)
+    """
 
 if __name__ == "__main__":
     run()
